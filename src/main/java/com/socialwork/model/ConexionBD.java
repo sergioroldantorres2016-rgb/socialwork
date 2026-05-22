@@ -1,5 +1,6 @@
 package com.socialwork.model;
 
+import com.socialwork.config.DatabaseInitializer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -7,6 +8,7 @@ import java.sql.SQLException;
 public class ConexionBD {
 
     public static Connection getConnection() throws SQLException {
+        DatabaseInitializer.initialize();
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {

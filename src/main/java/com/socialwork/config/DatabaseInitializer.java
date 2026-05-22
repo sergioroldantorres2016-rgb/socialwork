@@ -1,21 +1,18 @@
 package com.socialwork.config;
 
 import com.socialwork.model.ConexionBD;
-import jakarta.servlet.ServletContextEvent;
-import jakarta.servlet.ServletContextListener;
-import jakarta.servlet.annotation.WebListener;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.Statement;
 
-@WebListener
-public class DatabaseInitializer implements ServletContextListener {
+public class DatabaseInitializer {
+    private static volatile boolean initialized = false;
 
-    @Override
-    public void contextInitialized(ServletContextEvent event) {
-        try (InputStream is = getClass().getResourceAsStream("/init.sql")) {
+    public static synchronized void initialize() {
+        if (initialized) return;
+        try (InputStream is = DatabaseInitializer.class.getResourceAsStream("/init.sql")) {
             if (is == null) {
-                event.getServletContext().log("DatabaseInitializer: init.sql not found, skipping");
+                System.out.println("DatabaseInitializer: init.sql not found, skipping");
                 return;
             }
             String sql = new String(is.readAllBytes(), "UTF-8");
@@ -26,14 +23,11 @@ public class DatabaseInitializer implements ServletContextListener {
                         st.execute(trimmed);
                     }
                 }
-                event.getServletContext().log("DatabaseInitializer: schema initialized successfully");
+                initialized = true;
+                System.out.println("DatabaseInitializer: schema initialized successfully");
             }
         } catch (Exception e) {
-            event.getServletContext().log("DatabaseInitializer error: " + e.getMessage(), e);
+            System.out.println("DatabaseInitializer error: " + e.getMessage());
         }
-    }
-
-    @Override
-    public void contextDestroyed(ServletContextEvent event) {
     }
 }
