@@ -28,11 +28,11 @@ public class ConexionBD {
 
         String host = getEnvOrDefault("MYSQLHOST", getEnvOrDefault("DB_HOST", "localhost"));
         String port = getEnvOrDefault("MYSQLPORT", getEnvOrDefault("DB_PORT", "3306"));
-        String db = getEnvOrDefault("MYSQLDATABASE", getEnvOrDefault("DB_NAME", "socialwork"));
         String user = getEnvOrDefault("MYSQLUSER", getEnvOrDefault("DB_USER", "root"));
         String pass = getEnvOrDefault("MYSQLPASSWORD", getEnvOrDefault("DB_PASSWORD", "root"));
 
         boolean isRailway = System.getenv("MYSQLHOST") != null && !System.getenv("MYSQLHOST").isEmpty();
+        String db = getEnvOrDefault("MYSQLDATABASE", getEnvOrDefault("DB_NAME", isRailway ? "railway" : "socialwork"));
         String sslParam = getEnvOrDefault("MYSQL_SSL", isRailway ? "true" : "false");
         String url = "jdbc:mysql://" + host + ":" + port + "/" + db
                 + "?useSSL=" + sslParam + "&allowPublicKeyRetrieval=true&serverTimezone=UTC"
