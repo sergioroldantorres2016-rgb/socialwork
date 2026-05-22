@@ -13,9 +13,11 @@ public class DatabaseInitializer {
         try (InputStream is = DatabaseInitializer.class.getResourceAsStream("/init.sql")) {
             if (is == null) {
                 System.out.println("DatabaseInitializer: init.sql not found, skipping");
+                initialized = true;
                 return;
             }
             String sql = new String(is.readAllBytes(), "UTF-8");
+            initialized = true;
             try (Connection c = ConexionBD.getConnection(); Statement st = c.createStatement()) {
                 for (String statement : sql.split(";")) {
                     String trimmed = statement.trim();
@@ -23,10 +25,10 @@ public class DatabaseInitializer {
                         st.execute(trimmed);
                     }
                 }
-                initialized = true;
                 System.out.println("DatabaseInitializer: schema initialized successfully");
             }
         } catch (Exception e) {
+            initialized = false;
             System.out.println("DatabaseInitializer error: " + e.getMessage());
         }
     }
