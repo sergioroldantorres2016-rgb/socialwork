@@ -1,0 +1,6 @@
+target/
+*.txt
+*.log
+.idea/
+*.iml
+.vscode/
