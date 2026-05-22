@@ -13,15 +13,13 @@ public class DatabaseInitializer implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("/init.sql")) {
+        try (InputStream is = getClass().getResourceAsStream("/init.sql")) {
             if (is == null) {
                 event.getServletContext().log("DatabaseInitializer: init.sql not found, skipping");
                 return;
             }
             String sql = new String(is.readAllBytes(), "UTF-8");
             try (Connection c = ConexionBD.getConnection(); Statement st = c.createStatement()) {
-                st.execute("CREATE DATABASE IF NOT EXISTS socialwork CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci");
-                st.execute("USE socialwork");
                 for (String statement : sql.split(";")) {
                     String trimmed = statement.trim();
                     if (!trimmed.isEmpty()) {

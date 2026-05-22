@@ -15,6 +15,9 @@ public class ConexionBD {
 
         String mysqlUrl = System.getenv("MYSQL_URL");
         if (mysqlUrl != null && !mysqlUrl.isEmpty()) {
+            if (mysqlUrl.startsWith("mysql://")) {
+                mysqlUrl = "jdbc:" + mysqlUrl;
+            }
             return DriverManager.getConnection(mysqlUrl);
         }
 
@@ -24,8 +27,9 @@ public class ConexionBD {
         String user = getEnvOrDefault("MYSQLUSER", getEnvOrDefault("DB_USER", "root"));
         String pass = getEnvOrDefault("MYSQLPASSWORD", getEnvOrDefault("DB_PASSWORD", "root"));
 
+        String sslParam = getEnvOrDefault("MYSQL_SSL", "true");
         String url = "jdbc:mysql://" + host + ":" + port + "/" + db
-                + "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC"
+                + "?useSSL=" + sslParam + "&allowPublicKeyRetrieval=true&serverTimezone=UTC"
                 + "&characterEncoding=UTF-8&useUnicode=true";
 
         return DriverManager.getConnection(url, user, pass);
