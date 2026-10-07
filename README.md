@@ -40,7 +40,9 @@ Requisitos: Docker y Docker Compose instalados.
    git clone https://github.com/sergioroldantorres2016-rgb/socialwork.git
    cd socialwork
    ```
-2. Crea tu archivo de variables de entorno a partir de `.env.example` (con tus propias contraseñas) y no lo subas al repositorio.
+
+2. El archivo `.env.local` ya viene en el repositorio y solo contiene `API_URL=http://localhost:8080/api`, así que no hace falta configurar nada más.
+
 3. Levanta la aplicación y la base de datos:
    ```bash
    docker compose up --build
